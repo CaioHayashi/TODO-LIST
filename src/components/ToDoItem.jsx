@@ -8,23 +8,49 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 // import CommentIcon from "@mui/icons-material/Comment";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { Paper } from "@mui/material";
+import EditTodoDialog from "./EditTodoDialog";
+import { useState } from "react";
 
-export default function ToDoItem() {
+export default function ToDoItem({ todo, deleteTodo, editTodo }) {
+	const [openDialog, setOpenDialog] = useState(false);
+
+	const dialogHandler = () => {
+		setOpenDialog(!openDialog);
+	};
+
 	return (
-		<ListItem
-			secondaryAction={
-				<IconButton edge="end" aria-label="comments">
-					<DeleteIcon />
-				</IconButton>
-			}
-			disablePadding
-		>
-			<ListItemButton role={undefined} dense>
-				<ListItemIcon>
-					<Checkbox edge="start" tabIndex={-1} disableRipple />
-				</ListItemIcon>
-				<ListItemText primary={`Line Item`} />
-			</ListItemButton>
-		</ListItem>
+		<>
+			<EditTodoDialog
+				open={openDialog}
+				dialogHandler={dialogHandler}
+				todo={todo}
+				editTodo={editTodo}
+			/>
+			<Paper style={{ padding: "em 0em" }}>
+				<ListItem
+					secondaryAction={
+						<IconButton
+							edge="end"
+							aria-label="delete"
+							onClick={() => deleteTodo(todo.id)}
+						>
+							<DeleteIcon />
+						</IconButton>
+					}
+					disablePadding
+				>
+					<ListItemButton role={undefined} dense>
+						<ListItemIcon>
+							<Checkbox edge="start" tabIndex={-1} disableRipple />
+						</ListItemIcon>
+						<ListItemText
+							primary={todo.text}
+							onClick={() => setOpenDialog(true)}
+						/>
+					</ListItemButton>
+				</ListItem>
+			</Paper>
+		</>
 	);
 }
